@@ -1,5 +1,6 @@
-# swift-rfc-2045
+# Swift RFC 2045
 
+[![CI](https://github.com/swift-standards/swift-rfc-2045/workflows/CI/badge.svg)](https://github.com/swift-standards/swift-rfc-2045/actions/workflows/ci.yml)
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
 Swift implementation of RFC 2045: Multipurpose Internet Mail Extensions (MIME) Part One
@@ -21,15 +22,26 @@ This package provides a Swift implementation of MIME fundamentals as defined in 
 
 ## Installation
 
-### Swift Package Manager
+Add swift-rfc-2045 to your package dependencies:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/coenttb/swift-rfc-2045", branch: "main")
+    .package(url: "https://github.com/swift-standards/swift-rfc-2045.git", from: "0.1.0")
 ]
 ```
 
-## Usage
+Then add it to your target:
+
+```swift
+.target(
+    name: "YourTarget",
+    dependencies: [
+        .product(name: "RFC 2045", package: "swift-rfc-2045")
+    ]
+)
+```
+
+## Quick Start
 
 ### Content-Type
 
@@ -108,7 +120,9 @@ let encoding = try RFC_2045.ContentTransferEncoding(parsing: "base64")
 print(encoding.headerValue)  // "base64"
 ```
 
-## Type Overview
+## Usage
+
+### Type Overview
 
 ### `RFC_2045.ContentType`
 
@@ -161,25 +175,19 @@ This implementation follows RFC 2045 specifications:
 - Swift 6.0+
 - macOS 14+, iOS 17+, tvOS 17+, watchOS 10+
 
-## Related RFCs
-
-- [RFC 2045](https://www.rfc-editor.org/rfc/rfc2045.html) - MIME Part One: Format of Internet Message Bodies
-- [RFC 2046](https://www.rfc-editor.org/rfc/rfc2046.html) - MIME Part Two: Media Types
-- [RFC 2047](https://www.rfc-editor.org/rfc/rfc2047.html) - MIME Part Three: Header Extensions for Non-ASCII Text
-- [RFC 5322](https://www.rfc-editor.org/rfc/rfc5322.html) - Internet Message Format
-
 ## Related Packages
 
-- [swift-rfc-2046](https://github.com/coenttb/swift-rfc-2046) - MIME multipart media types
-- [swift-rfc-5322](https://github.com/coenttb/swift-rfc-5322) - Internet Message Format
+### Used By
+- [swift-rfc-2046](https://github.com/swift-standards/swift-rfc-2046) - MIME Part Two: Media Types
+- [swift-rfc-7578](https://github.com/swift-standards/swift-rfc-7578) - Returning Values from Forms: multipart/form-data
+
+### Related
+- [swift-rfc-2388](https://github.com/swift-standards/swift-rfc-2388) - Returning Values from Forms: multipart/form-data encoding
 
 ## License
 
-Licensed under Apache 2.0.
+This library is released under the Apache License 2.0. See [LICENSE](LICENSE) for details.
 
 ## Contributing
 
-Contributions welcome! Please ensure:
-- All tests pass
-- Code follows existing style
-- RFC 2045 compliance maintained
+Contributions are welcome! Please feel free to submit a Pull Request.
