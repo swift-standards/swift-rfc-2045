@@ -126,8 +126,14 @@ extension RFC_2045 {
             return result
         }
 
-        /// Convenience accessor for charset parameter
-        public var charset: String? {
+        /// Convenience accessor for charset parameter (type-safe)
+        public var charset: RFC_2045.Charset? {
+            parameters["charset"].map { RFC_2045.Charset($0) }
+        }
+
+        /// Convenience accessor for charset parameter (raw string)
+        @available(*, deprecated, message: "Use charset property which returns RFC_2045.Charset instead")
+        public var charsetString: String? {
             parameters["charset"]
         }
 
@@ -158,7 +164,7 @@ extension RFC_2045.ContentType {
     public static let textPlainUTF8 = RFC_2045.ContentType(
         type: "text",
         subtype: "plain",
-        parameters: ["charset": "UTF-8"]
+        parameters: ["charset": RFC_2045.Charset.utf8.rawValue]
     )
 
     /// text/html
@@ -168,7 +174,7 @@ extension RFC_2045.ContentType {
     public static let textHTMLUTF8 = RFC_2045.ContentType(
         type: "text",
         subtype: "html",
-        parameters: ["charset": "UTF-8"]
+        parameters: ["charset": RFC_2045.Charset.utf8.rawValue]
     )
 
     /// Creates multipart/alternative with the given boundary
