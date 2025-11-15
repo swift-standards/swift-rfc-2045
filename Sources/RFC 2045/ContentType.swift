@@ -194,6 +194,73 @@ extension RFC_2045.ContentType {
             parameters: ["boundary": boundary]
         )
     }
+
+    // MARK: Application Types
+
+    /// application/octet-stream
+    public static let applicationOctetStream = RFC_2045.ContentType(
+        type: "application",
+        subtype: "octet-stream"
+    )
+
+    /// Creates application/octet-stream with optional name parameter
+    public static func applicationOctetStream(name: String? = nil) -> RFC_2045.ContentType {
+        var params: [String: String] = [:]
+        if let name = name {
+            params["name"] = name
+        }
+        return RFC_2045.ContentType(type: "application", subtype: "octet-stream", parameters: params)
+    }
+
+    /// application/pdf
+    public static let applicationPDF = RFC_2045.ContentType(type: "application", subtype: "pdf")
+
+    /// Creates application/pdf with optional name parameter
+    public static func applicationPDF(name: String? = nil) -> RFC_2045.ContentType {
+        var params: [String: String] = [:]
+        if let name = name {
+            params["name"] = name
+        }
+        return RFC_2045.ContentType(type: "application", subtype: "pdf", parameters: params)
+    }
+
+    // MARK: Image Types
+
+    /// image/jpeg
+    public static let imageJPEG = RFC_2045.ContentType(type: "image", subtype: "jpeg")
+
+    /// Creates image/jpeg with optional name parameter
+    public static func imageJPEG(name: String? = nil) -> RFC_2045.ContentType {
+        var params: [String: String] = [:]
+        if let name = name {
+            params["name"] = name
+        }
+        return RFC_2045.ContentType(type: "image", subtype: "jpeg", parameters: params)
+    }
+
+    /// image/png
+    public static let imagePNG = RFC_2045.ContentType(type: "image", subtype: "png")
+
+    /// Creates image/png with optional name parameter
+    public static func imagePNG(name: String? = nil) -> RFC_2045.ContentType {
+        var params: [String: String] = [:]
+        if let name = name {
+            params["name"] = name
+        }
+        return RFC_2045.ContentType(type: "image", subtype: "png", parameters: params)
+    }
+
+    /// image/gif
+    public static let imageGIF = RFC_2045.ContentType(type: "image", subtype: "gif")
+
+    /// Creates image/gif with optional name parameter
+    public static func imageGIF(name: String? = nil) -> RFC_2045.ContentType {
+        var params: [String: String] = [:]
+        if let name = name {
+            params["name"] = name
+        }
+        return RFC_2045.ContentType(type: "image", subtype: "gif", parameters: params)
+    }
 }
 
 // MARK: - Protocol Conformances
