@@ -1,4 +1,4 @@
-import Foundation
+import INCITS_4_1986
 
 extension RFC_2045 {
     /// MIME Content-Type header
@@ -77,9 +77,8 @@ extension RFC_2045 {
                 throw MIMEError.invalidMediaType(String(mediaType))
             }
 
-            self.type = String(mediaComponents[0]).trimmingCharacters(in: .whitespaces).lowercased()
-            self.subtype = String(mediaComponents[1]).trimmingCharacters(in: .whitespaces)
-                .lowercased()
+            self.type = String(mediaComponents[0]).trimming(.whitespaces).lowercased()
+            self.subtype = String(mediaComponents[1]).trimming(.whitespaces).lowercased()
 
             // Parse parameters if present
             var params: [String: String] = [:]
@@ -93,8 +92,8 @@ extension RFC_2045 {
                         continue
                     }
 
-                    let key = String(keyValue[0]).trimmingCharacters(in: .whitespaces).lowercased()
-                    var value = String(keyValue[1]).trimmingCharacters(in: .whitespaces)
+                    let key = String(keyValue[0]).trimming(.whitespaces).lowercased()
+                    var value = String(keyValue[1]).trimming(.whitespaces)
 
                     // Remove quotes if present
                     if value.hasPrefix("\"") && value.hasSuffix("\"") {

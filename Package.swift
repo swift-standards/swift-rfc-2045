@@ -5,10 +5,10 @@ import PackageDescription
 let package = Package(
     name: "swift-rfc-2045",
     platforms: [
-        .macOS(.v14),
-        .iOS(.v17),
-        .tvOS(.v17),
-        .watchOS(.v10)
+        .macOS(.v15),
+        .iOS(.v18),
+        .tvOS(.v18),
+        .watchOS(.v11)
     ],
     products: [
         .library(
@@ -16,11 +16,15 @@ let package = Package(
             targets: ["RFC 2045"]
         )
     ],
-    dependencies: [],
+    dependencies: [
+        .package(path: "../swift-incits-4-1986"),
+    ],
     targets: [
         .target(
             name: "RFC 2045",
-            dependencies: []
+            dependencies: [
+                .product(name: "INCITS 4 1986", package: "swift-incits-4-1986"),
+            ]
         ),
         .testTarget(
             name: "RFC 2045 Tests",
@@ -30,9 +34,9 @@ let package = Package(
 )
 
 for target in package.targets {
-    target.swiftSettings?.append(
-        contentsOf: [
-            .enableUpcomingFeature("MemberImportVisibility")
-        ]
+    var settings = target.swiftSettings ?? []
+    settings.append(
+        .enableUpcomingFeature("MemberImportVisibility")
     )
+    target.swiftSettings = settings
 }

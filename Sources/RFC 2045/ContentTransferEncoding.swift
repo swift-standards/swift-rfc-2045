@@ -1,4 +1,4 @@
-import Foundation
+import INCITS_4_1986
 
 extension RFC_2045 {
     /// MIME Content-Transfer-Encoding header
@@ -65,7 +65,7 @@ extension RFC_2045 {
         public init(parsing headerValue: String) throws {
             let normalized =
                 headerValue
-                .trimmingCharacters(in: .whitespaces)
+                .trimming(.whitespaces)
                 .lowercased()
 
             guard let encoding = ContentTransferEncoding(rawValue: normalized) else {

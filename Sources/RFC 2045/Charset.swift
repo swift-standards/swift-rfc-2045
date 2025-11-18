@@ -1,5 +1,3 @@
-import Foundation
-
 extension RFC_2045 {
     /// Character set identifier for MIME content
     ///

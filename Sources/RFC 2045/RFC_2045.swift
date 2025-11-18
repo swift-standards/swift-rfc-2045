@@ -1,5 +1,3 @@
-import Foundation
-
 /// RFC 2045: Multipurpose Internet Mail Extensions (MIME) Part One
 ///
 /// This module implements the fundamental MIME types defined in RFC 2045 for
@@ -47,22 +45,5 @@ public enum RFC_2045 {
         case invalidMediaType(String)
         case invalidParameter(String)
         case invalidEncoding(String)
-    }
-}
-
-// MARK: - LocalizedError Conformance
-
-extension RFC_2045.MIMEError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .invalidContentType(let value):
-            return "Invalid Content-Type: '\(value)'"
-        case .invalidMediaType(let value):
-            return "Invalid media type: '\(value)'. Must be in format 'type/subtype'"
-        case .invalidParameter(let value):
-            return "Invalid Content-Type parameter: '\(value)'"
-        case .invalidEncoding(let value):
-            return "Invalid Content-Transfer-Encoding: '\(value)'"
-        }
     }
 }
