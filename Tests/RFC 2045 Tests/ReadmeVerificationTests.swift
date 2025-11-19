@@ -2,11 +2,11 @@ import Testing
 
 @testable import RFC_2045
 
-@Suite("README Verification")
-struct ReadmeVerificationTests {
+@Suite
+struct `README Verification` {
 
-    @Test("Example from README: Content-Type Examples")
-    func exampleContentTypeExamples() throws {
+    @Test
+    func `Example from README: Content-Type Examples`() throws {
         // From README lines 37-58
 
         // Simple text type
@@ -38,8 +38,8 @@ struct ReadmeVerificationTests {
         #expect(headers["Content-Type"] == "text/html; charset=UTF-8")
     }
 
-    @Test("Example from README: Content-Transfer-Encoding")
-    func exampleContentTransferEncoding() {
+    @Test
+    func `Example from README: Content-Transfer-Encoding`() {
         // From README lines 65-77
 
         // Common encodings
@@ -58,8 +58,8 @@ struct ReadmeVerificationTests {
         #expect(base64.isEncoded == true)
     }
 
-    @Test("Example from README: Common Content Types")
-    func exampleCommonContentTypes() {
+    @Test
+    func `Example from README: Common Content Types`() {
         // From README lines 83-92
 
         // Preset content types
@@ -83,8 +83,8 @@ struct ReadmeVerificationTests {
         #expect(mixed.boundary == "----=_Part_5678")
     }
 
-    @Test("Example from README: Parsing Headers")
-    func exampleParsingHeaders() throws {
+    @Test
+    func `Example from README: Parsing Headers`() throws {
         // From README lines 97-109
 
         // Parse Content-Type header
