@@ -1,5 +1,5 @@
 import Foundation
-import Standards
+public import Standards
 
 extension RFC_2045 {
     /// MIME parameter handling per RFC 2045 Section 5.1
