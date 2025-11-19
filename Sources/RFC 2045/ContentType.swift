@@ -114,9 +114,9 @@ extension RFC_2045 {
             var result = "\(type)/\(subtype)"
 
             for (key, value) in parameters.sorted(by: { $0.key < $1.key }) {
-                // Quote value if it contains special characters
+                // Quote value if it contains special characters per RFC 2045 Section 5.1
                 let needsQuoting = value.contains(where: {
-                    $0.isWhitespace || "()<>@,;:\\\"/[]?=".contains($0)
+                    $0.isASCIIWhitespace || "()<>@,;:\\\"/[]?=".contains($0)
                 })
                 let quotedValue = needsQuoting ? "\"\(value)\"" : value
                 result += "; \(key)=\(quotedValue)"
