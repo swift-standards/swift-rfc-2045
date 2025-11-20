@@ -12,14 +12,14 @@ extension RFC_2045 {
     /// // Simple text type
     /// let plain = RFC_2045.ContentType(type: "text", subtype: "plain")
     ///
-    /// // With charset parameter
+    /// // With charset parameter (type-safe)
     /// let html = RFC_2045.ContentType(
     ///     type: "text",
     ///     subtype: "html",
-    ///     parameters: ["charset": "UTF-8"]
+    ///     parameters: [.charset: "UTF-8"]
     /// )
     ///
-    /// // Multipart with boundary
+    /// // Multipart with boundary (string literals work via ExpressibleByStringLiteral)
     /// let multipart = RFC_2045.ContentType(
     ///     type: "multipart",
     ///     subtype: "alternative",
@@ -41,19 +41,22 @@ extension RFC_2045 {
         /// The media subtype (e.g., "plain", "html", "jpeg")
         public let subtype: String
 
-        /// Optional parameters (e.g., ["charset": "UTF-8"])
-        public let parameters: [String: String]
+        /// Optional parameters (e.g., [.charset: "UTF-8"])
+        ///
+        /// Uses type-safe `RFC_2045.Parameter.Name` for parameter names.
+        /// String literals work via `ExpressibleByStringLiteral` conformance.
+        public let parameters: [RFC_2045.Parameter.Name: String]
 
         /// Creates a new Content-Type
         ///
         /// - Parameters:
         ///   - type: Primary media type (case-insensitive)
         ///   - subtype: Media subtype (case-insensitive)
-        ///   - parameters: Optional parameters
+        ///   - parameters: Optional parameters with type-safe names
         public init(
             type: String,
             subtype: String,
-            parameters: [String: String] = [:]
+            parameters: [RFC_2045.Parameter.Name: String] = [:]
         ) {
             self.type = type.lowercased()
             self.subtype = subtype.lowercased()
@@ -81,7 +84,7 @@ extension RFC_2045 {
             self.subtype = String(mediaComponents[1]).trimming(.whitespaces).lowercased()
 
             // Parse parameters if present
-            var params: [String: String] = [:]
+            var params: [RFC_2045.Parameter.Name: String] = [:]
             if components.count > 1 {
                 let paramString = String(components[1])
                 let paramPairs = paramString.split(separator: ";")
@@ -92,7 +95,8 @@ extension RFC_2045 {
                         continue
                     }
 
-                    let key = String(keyValue[0]).trimming(.whitespaces).lowercased()
+                    let keyString = String(keyValue[0]).trimming(.whitespaces).lowercased()
+                    let key = RFC_2045.Parameter.Name(rawValue: keyString)
                     var value = String(keyValue[1]).trimming(.whitespaces)
 
                     // Remove quotes if present
@@ -204,7 +208,7 @@ extension RFC_2045.ContentType {
 
     /// Creates application/octet-stream with optional name parameter
     public static func applicationOctetStream(name: String? = nil) -> RFC_2045.ContentType {
-        var params: [String: String] = [:]
+        var params: [RFC_2045.Parameter.Name: String] = [:]
         if let name = name {
             params["name"] = name
         }
@@ -216,7 +220,7 @@ extension RFC_2045.ContentType {
 
     /// Creates application/pdf with optional name parameter
     public static func applicationPDF(name: String? = nil) -> RFC_2045.ContentType {
-        var params: [String: String] = [:]
+        var params: [RFC_2045.Parameter.Name: String] = [:]
         if let name = name {
             params["name"] = name
         }
@@ -230,7 +234,7 @@ extension RFC_2045.ContentType {
 
     /// Creates image/jpeg with optional name parameter
     public static func imageJPEG(name: String? = nil) -> RFC_2045.ContentType {
-        var params: [String: String] = [:]
+        var params: [RFC_2045.Parameter.Name: String] = [:]
         if let name = name {
             params["name"] = name
         }
@@ -242,7 +246,7 @@ extension RFC_2045.ContentType {
 
     /// Creates image/png with optional name parameter
     public static func imagePNG(name: String? = nil) -> RFC_2045.ContentType {
-        var params: [String: String] = [:]
+        var params: [RFC_2045.Parameter.Name: String] = [:]
         if let name = name {
             params["name"] = name
         }
@@ -254,7 +258,7 @@ extension RFC_2045.ContentType {
 
     /// Creates image/gif with optional name parameter
     public static func imageGIF(name: String? = nil) -> RFC_2045.ContentType {
-        var params: [String: String] = [:]
+        var params: [RFC_2045.Parameter.Name: String] = [:]
         if let name = name {
             params["name"] = name
         }
