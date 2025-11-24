@@ -80,8 +80,8 @@ extension RFC_2045 {
                 throw MIMEError.invalidMediaType(String(mediaType))
             }
 
-            self.type = String(mediaComponents[0]).trimming(.whitespaces).lowercased()
-            self.subtype = String(mediaComponents[1]).trimming(.whitespaces).lowercased()
+            self.type = String(mediaComponents[0]).trimming(.ascii.whitespaces).lowercased()
+            self.subtype = String(mediaComponents[1]).trimming(.ascii.whitespaces).lowercased()
 
             // Parse parameters if present
             var params: [RFC_2045.Parameter.Name: String] = [:]
@@ -95,9 +95,9 @@ extension RFC_2045 {
                         continue
                     }
 
-                    let keyString = String(keyValue[0]).trimming(.whitespaces).lowercased()
+                    let keyString = String(keyValue[0]).trimming(.ascii.whitespaces).lowercased()
                     let key = RFC_2045.Parameter.Name(rawValue: keyString)
-                    var value = String(keyValue[1]).trimming(.whitespaces)
+                    var value = String(keyValue[1]).trimming(.ascii.whitespaces)
 
                     // Remove quotes if present
                     if value.hasPrefix("\"") && value.hasSuffix("\"") {
@@ -120,7 +120,7 @@ extension RFC_2045 {
             for (key, value) in parameters.sorted(by: { $0.key < $1.key }) {
                 // Quote value if it contains special characters per RFC 2045 Section 5.1
                 let needsQuoting = value.contains(where: {
-                    $0.isASCIIWhitespace || "()<>@,;:\\\"/[]?=".contains($0)
+                    $0.ascii.isWhitespace || "()<>@,;:\\\"/[]?=".contains($0)
                 })
                 let quotedValue = needsQuoting ? "\"\(value)\"" : value
                 result += "; \(key)=\(quotedValue)"

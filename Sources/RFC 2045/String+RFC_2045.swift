@@ -45,7 +45,9 @@ extension String {
     /// let value = String(encoding)
     /// // "base64"
     /// ```
-    public init(_ encoding: RFC_2045.ContentTransferEncoding) {
+    public init(
+        _ encoding: RFC_2045.ContentTransferEncoding
+    ) {
         self = encoding.rawValue
     }
 }

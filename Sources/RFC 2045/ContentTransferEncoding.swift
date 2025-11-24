@@ -65,7 +65,7 @@ extension RFC_2045 {
         public init(parsing headerValue: String) throws {
             let normalized =
                 headerValue
-                .trimming(.whitespaces)
+                .trimming(.ascii.whitespaces)
                 .lowercased()
 
             guard let encoding = ContentTransferEncoding(rawValue: normalized) else {
