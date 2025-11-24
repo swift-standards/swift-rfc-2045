@@ -60,19 +60,23 @@ extension RFC_2045 {
 
         /// Parses a Content-Transfer-Encoding header value
         ///
+        /// Composes through canonical byte representation for academic correctness.
+        ///
+        /// ## Category Theory
+        ///
+        /// Parsing composes as:
+        /// ```
+        /// String → [UInt8] (UTF-8) → ContentTransferEncoding
+        /// ```
+        ///
         /// - Parameter headerValue: The header value (e.g., "base64")
         /// - Throws: `MIMEError` if the encoding is not recognized
         public init(parsing headerValue: String) throws {
-            let normalized =
-                headerValue
-                .trimming(.ascii.whitespaces)
-                .lowercased()
+            // Convert to canonical byte representation (UTF-8, which is ASCII-compatible)
+            let bytes = Array(headerValue.utf8)
 
-            guard let encoding = ContentTransferEncoding(rawValue: normalized) else {
-                throw MIMEError.invalidEncoding(headerValue)
-            }
-
-            self = encoding
+            // Delegate to primitive byte-level parser
+            try self.init(ascii: bytes)
         }
 
         /// Returns true if this encoding is binary-safe
