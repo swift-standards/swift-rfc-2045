@@ -18,11 +18,11 @@ extension RFC_5322.Header {
     ///
     /// ```swift
     /// let contentType = RFC_2045.ContentType.textPlainUTF8
-    /// let header = RFC_5322.Header(contentType)
+    /// let header = try RFC_5322.Header(contentType)
     /// // Header(name: .contentType, value: "text/plain; charset=UTF-8")
     /// ```
-    public init(_ contentType: RFC_2045.ContentType) {
-        self.init(name: .contentType, value: String(contentType))
+    public init(_ contentType: RFC_2045.ContentType) throws {
+        try self.init(name: .contentType, value: .init(contentType))
     }
 
     /// Creates a Content-Transfer-Encoding header from RFC 2045 ContentTransferEncoding
@@ -33,10 +33,10 @@ extension RFC_5322.Header {
     ///
     /// ```swift
     /// let encoding = RFC_2045.ContentTransferEncoding.base64
-    /// let header = RFC_5322.Header(encoding)
+    /// let header = try RFC_5322.Header(encoding)
     /// // Header(name: .contentTransferEncoding, value: "base64")
     /// ```
-    public init(_ encoding: RFC_2045.ContentTransferEncoding) {
-        self.init(name: .contentTransferEncoding, value: String(encoding))
+    public init(_ encoding: RFC_2045.ContentTransferEncoding) throws {
+        try self.init(name: .contentTransferEncoding, value: .init(encoding))
     }
 }

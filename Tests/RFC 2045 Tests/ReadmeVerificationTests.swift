@@ -7,27 +7,17 @@ struct `README Verification` {
 
     @Test
     func `Example from README: Content-Type Examples`() throws {
-        // From README lines 37-58
-
-        // Simple text type
-        let plain = RFC_2045.ContentType(type: "text", subtype: "plain")
+        // Simple text type using static constant
+        let plain = RFC_2045.ContentType.textPlain
         #expect(plain.type == "text")
         #expect(plain.subtype == "plain")
 
-        // With charset parameter
-        let html = RFC_2045.ContentType(
-            type: "text",
-            subtype: "html",
-            parameters: ["charset": "UTF-8"]
-        )
+        // Parse from string using UInt8.ASCII.Serializing protocol
+        let html = try RFC_2045.ContentType("text/html; charset=UTF-8")
         #expect(html.headerValue == "text/html; charset=UTF-8")
 
         // Multipart with boundary
-        let multipart = RFC_2045.ContentType(
-            type: "multipart",
-            subtype: "alternative",
-            parameters: ["boundary": "----=_Part_1234"]
-        )
+        let multipart = RFC_2045.ContentType.multipartAlternative(boundary: "----=_Part_1234")
         #expect(multipart.isMultipart == true)
         #expect(multipart.boundary == "----=_Part_1234")
 
@@ -39,9 +29,7 @@ struct `README Verification` {
     }
 
     @Test
-    func `Example from README: Content-Transfer-Encoding`() {
-        // From README lines 65-77
-
+    func `Example from README: Content-Transfer-Encoding`() throws {
         // Common encodings
         let base64 = RFC_2045.ContentTransferEncoding.base64
         _ = RFC_2045.ContentTransferEncoding.quotedPrintable
@@ -60,8 +48,6 @@ struct `README Verification` {
 
     @Test
     func `Example from README: Common Content Types`() {
-        // From README lines 83-92
-
         // Preset content types
         let textPlain = RFC_2045.ContentType.textPlain
         #expect(textPlain.headerValue == "text/plain")
@@ -85,19 +71,53 @@ struct `README Verification` {
 
     @Test
     func `Example from README: Parsing Headers`() throws {
-        // From README lines 97-109
-
-        // Parse Content-Type header
-        let contentType = try RFC_2045.ContentType(
-            parsing: "text/html; charset=UTF-8"
-        )
+        // Parse Content-Type header using UInt8.ASCII.Serializing protocol
+        let contentType = try RFC_2045.ContentType("text/html; charset=UTF-8")
 
         #expect(contentType.type == "text")
         #expect(contentType.subtype == "html")
         #expect(contentType.charset == "UTF-8")
 
-        // Parse Content-Transfer-Encoding header
-        let encoding = try RFC_2045.ContentTransferEncoding(parsing: "base64")
+        // Parse Content-Transfer-Encoding header using UInt8.ASCII.Serializing protocol
+        let encoding = try RFC_2045.ContentTransferEncoding("base64")
         #expect(encoding.headerValue == "base64")
+    }
+
+    @Test
+    func `Typed throws error handling`() {
+        // Test that typed throws work correctly
+        do throws(RFC_2045.ContentType.Error) {
+            _ = try RFC_2045.ContentType("")
+        } catch {
+            #expect(error == .empty)
+        }
+
+        do throws(RFC_2045.ContentType.Error) {
+            _ = try RFC_2045.ContentType("invalid")
+        } catch {
+            switch error {
+            case .missingSeparator:
+                break // Expected
+            default:
+                Issue.record("Expected missingSeparator error")
+            }
+        }
+
+        do throws(RFC_2045.ContentTransferEncoding.Error) {
+            _ = try RFC_2045.ContentTransferEncoding("")
+        } catch {
+            #expect(error == .empty)
+        }
+
+        do throws(RFC_2045.ContentTransferEncoding.Error) {
+            _ = try RFC_2045.ContentTransferEncoding("unknown")
+        } catch {
+            switch error {
+            case .unrecognizedEncoding:
+                break // Expected
+            default:
+                Issue.record("Expected unrecognizedEncoding error")
+            }
+        }
     }
 }
