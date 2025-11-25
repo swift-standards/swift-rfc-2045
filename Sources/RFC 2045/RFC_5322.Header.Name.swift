@@ -18,7 +18,10 @@ extension RFC_5322.Header.Name {
     /// Content-Transfer-Encoding: header
     ///
     /// Defined in RFC 2045 Section 6: "Content-Transfer-Encoding Header Field"
-    public static let contentTransferEncoding: Self = .init(__unchecked: (), rawValue: "Content-Transfer-Encoding")
+    public static let contentTransferEncoding: Self = .init(
+        __unchecked: (),
+        rawValue: "Content-Transfer-Encoding"
+    )
 
     /// MIME-Version: header
     ///
@@ -33,5 +36,8 @@ extension RFC_5322.Header.Name {
     /// Content-Description: header
     ///
     /// Defined in RFC 2045 Section 8: "Content-Description Header Field"
-    public static let contentDescription: Self = .init(__unchecked: (), rawValue: "Content-Description")
+    public static let contentDescription: Self = .init(
+        __unchecked: (),
+        rawValue: "Content-Description"
+    )
 }

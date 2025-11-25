@@ -122,7 +122,7 @@ extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializing {
     ///
     /// - Parameter bytes: The ASCII byte representation of the parameter name
     /// - Throws: `RFC_2045.Parameter.Name.Error` if the bytes are malformed
-    public init<Bytes: Collection>(ascii bytes: Bytes) throws(Error)
+    public init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
     where Bytes.Element == UInt8 {
         guard !bytes.isEmpty else {
             throw Error.empty
@@ -130,21 +130,21 @@ extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializing {
 
         // tspecials that are not allowed in tokens
         let tspecials: Set<UInt8> = [
-            .ascii.leftParenthesis,   // (
+            .ascii.leftParenthesis,  // (
             .ascii.rightParenthesis,  // )
-            .ascii.lessThanSign,      // <
-            .ascii.greaterThanSign,   // >
-            .ascii.atSign,            // @
-            .ascii.comma,             // ,
-            .ascii.semicolon,         // ;
-            .ascii.colon,             // :
-            .ascii.backslash,         // \
-            .ascii.quotationMark,     // "
-            .ascii.solidus,           // /
-            .ascii.leftSquareBracket, // [
-            .ascii.rightSquareBracket,// ]
-            .ascii.questionMark,      // ?
-            .ascii.equalsSign,        // =
+            .ascii.lessThanSign,  // <
+            .ascii.greaterThanSign,  // >
+            .ascii.atSign,  // @
+            .ascii.comma,  // ,
+            .ascii.semicolon,  // ;
+            .ascii.colon,  // :
+            .ascii.backslash,  // \
+            .ascii.quotationMark,  // "
+            .ascii.solidus,  // /
+            .ascii.leftSquareBracket,  // [
+            .ascii.rightSquareBracket,  // ]
+            .ascii.questionMark,  // ?
+            .ascii.equalsSign,  // =
         ]
 
         // Validate all bytes are valid token characters

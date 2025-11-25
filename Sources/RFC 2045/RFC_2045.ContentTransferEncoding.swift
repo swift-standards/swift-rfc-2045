@@ -62,6 +62,9 @@ extension RFC_2045 {
         /// The header value string
         ///
         /// Example: `"base64"`
+        ///
+        /// Note: This uses the enum's native `rawValue`, NOT the protocol extension's.
+        /// It works because we access it on a concrete type, not through a protocol constraint.
         public var headerValue: String {
             rawValue
         }
@@ -93,78 +96,61 @@ extension RFC_2045 {
     }
 }
 
+extension [UInt8] {
+    public init(
+        _ contentTransferEncoding: RFC_2045.ContentTransferEncoding.Type
+    ) {
+        self = Array("Content-Transfer-Encoding".utf8)
+    }
+}
+
 // MARK: - Serializing
 
 extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializing {
     public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
 
-    /// Parses a Content-Transfer-Encoding header from canonical byte representation (CANONICAL PRIMITIVE)
-    ///
-    /// This is the primitive parser that works at the byte level.
-    /// RFC 2045 MIME headers are pure ASCII, so this parser operates on ASCII bytes.
-    ///
-    /// ## Category Theory
-    ///
-    /// This is the fundamental parsing transformation:
-    /// - **Domain**: [UInt8] (ASCII bytes)
-    /// - **Codomain**: RFC_2045.ContentTransferEncoding (structured data)
-    ///
-    /// String-based parsing is derived as composition:
-    /// ```
-    /// String → [UInt8] (UTF-8 bytes) → ContentTransferEncoding
-    /// ```
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let bytes = Array("base64".utf8)
-    /// let encoding = try RFC_2045.ContentTransferEncoding(ascii: bytes)
-    /// ```
+    /// Parses a Content-Transfer-Encoding header from canonical byte representation
     ///
     /// - Parameter bytes: The ASCII byte representation of the header value
     /// - Throws: `RFC_2045.ContentTransferEncoding.Error` if the encoding is not recognized
-    public init<Bytes: Collection>(ascii bytes: Bytes) throws(Error)
+    public init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
     where Bytes.Element == UInt8 {
-        // Trim whitespace from collection
-        var trimmedBytes = [UInt8]()
-        var foundNonWhitespace = false
-        var trailingWhitespace = [UInt8]()
+        // Trim linear whitespace (LWSP per RFC 822) and normalize to lowercase
+        let trimmed = bytes.ascii.trimming([.ascii.space, .ascii.htab])
 
-        for byte in bytes {
-            if byte == .ascii.space || byte == .ascii.htab {
-                if foundNonWhitespace {
-                    trailingWhitespace.append(byte)
-                }
-            } else {
-                foundNonWhitespace = true
-                trimmedBytes.append(contentsOf: trailingWhitespace)
-                trailingWhitespace.removeAll()
-                trimmedBytes.append(byte)
-            }
-        }
-
-        guard !trimmedBytes.isEmpty else {
+        guard !trimmed.isEmpty else {
             throw Error.empty
         }
 
-        let normalized = String(decoding: trimmedBytes, as: UTF8.self).lowercased()
+        let normalized = trimmed.ascii.lowercased()
 
-        // Match directly to avoid protocol extension's init?(rawValue:) which would recurse
-        switch normalized {
-        case "7bit":
+        // Match byte sequences directly (zero String allocation)
+        switch normalized.count {
+        case 4 where normalized == .`7bit`:
             self = .sevenBit
-        case "8bit":
+        case 4 where normalized == .`8bit`:
             self = .eightBit
-        case "binary":
-            self = .binary
-        case "quoted-printable":
-            self = .quotedPrintable
-        case "base64":
+        case 6 where normalized == .base64:
             self = .base64
+        case 6 where normalized == .binary:
+            self = .binary
+        case 16 where normalized == .quotedPrintable:
+            self = .quotedPrintable
         default:
             throw Error.unrecognizedEncoding(String(decoding: bytes, as: UTF8.self))
         }
     }
+}
+
+extension [UInt8] {
+    static let `7bit`: Self = [.ascii.`7`, .ascii.b, .ascii.i, .ascii.t]
+    static let `8bit`: Self = [.ascii.`8`, .ascii.b, .ascii.i, .ascii.t]
+    static let base64: Self = [.ascii.b, .ascii.a, .ascii.s, .ascii.e, .ascii.`6`, .ascii.`4`]
+    static let binary: Self = [.ascii.b, .ascii.i, .ascii.n, .ascii.a, .ascii.r, .ascii.y]
+    static let quotedPrintable: Self = [
+        .ascii.q, .ascii.u, .ascii.o, .ascii.t, .ascii.e, .ascii.d, .ascii.hyphen,
+        .ascii.p, .ascii.r, .ascii.i, .ascii.n, .ascii.t, .ascii.a, .ascii.b, .ascii.l, .ascii.e,
+    ]
 }
 
 // MARK: - Byte Serialization
@@ -172,55 +158,9 @@ extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializing {
 extension [UInt8] {
     /// Creates ASCII byte representation of an RFC 2045 ContentTransferEncoding
     ///
-    /// This is the canonical serialization of MIME Content-Transfer-Encoding headers to bytes.
-    /// RFC 2045 MIME headers are ASCII-only by definition.
-    ///
-    /// ## Category Theory
-    ///
-    /// This is the most universal serialization (natural transformation):
-    /// - **Domain**: RFC_2045.ContentTransferEncoding (structured data)
-    /// - **Codomain**: [UInt8] (ASCII bytes)
-    ///
-    /// String representation is derived as composition:
-    /// ```
-    /// ContentTransferEncoding → [UInt8] (ASCII) → String (UTF-8 interpretation)
-    /// ```
-    ///
-    /// ## Performance
-    ///
-    /// Zero-allocation: Returns static ASCII byte sequences.
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let encoding = RFC_2045.ContentTransferEncoding.base64
-    /// let bytes = [UInt8](encoding)
-    /// // bytes represents "base64" as ASCII bytes
-    /// ```
-    ///
     /// - Parameter encoding: The transfer encoding to serialize
     public init(_ encoding: RFC_2045.ContentTransferEncoding) {
-        switch encoding {
-        case .sevenBit:
-            // "7bit"
-            self = [.ascii.`7`, .ascii.b, .ascii.i, .ascii.t]
-        case .eightBit:
-            // "8bit"
-            self = [.ascii.`8`, .ascii.b, .ascii.i, .ascii.t]
-        case .binary:
-            // "binary"
-            self = [.ascii.b, .ascii.i, .ascii.n, .ascii.a, .ascii.r, .ascii.y]
-        case .quotedPrintable:
-            // "quoted-printable"
-            self = [
-                .ascii.q, .ascii.u, .ascii.o, .ascii.t, .ascii.e, .ascii.d,
-                .ascii.hyphen,
-                .ascii.p, .ascii.r, .ascii.i, .ascii.n, .ascii.t, .ascii.a, .ascii.b, .ascii.l, .ascii.e
-            ]
-        case .base64:
-            // "base64"
-            self = [.ascii.b, .ascii.a, .ascii.s, .ascii.e, .ascii.`6`, .ascii.`4`]
-        }
+        self = Array(encoding.rawValue.utf8)
     }
 }
 

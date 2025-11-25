@@ -124,7 +124,7 @@ extension RFC_2045.Charset: UInt8.ASCII.Serializing {
     ///
     /// - Parameter bytes: The ASCII byte representation of the charset identifier
     /// - Throws: `RFC_2045.Charset.Error` if the bytes are malformed
-    public init<Bytes: Collection>(ascii bytes: Bytes) throws(Error)
+    public init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
     where Bytes.Element == UInt8 {
         guard !bytes.isEmpty else {
             throw Error.empty
@@ -181,7 +181,7 @@ extension [UInt8] {
 
 // MARK: - Protocol Conformances
 
-extension RFC_2045.Charset: RawRepresentable {}
+extension RFC_2045.Charset: UInt8.ASCII.RawRepresentable {}
 extension RFC_2045.Charset: CustomStringConvertible {}
 
 // MARK: - Common Charsets

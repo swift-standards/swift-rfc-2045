@@ -68,6 +68,14 @@ extension RFC_2045 {
     }
 }
 
+extension [UInt8] {
+    public init(
+        _ contentType: RFC_2045.ContentType.Type
+    ) {
+        self = Array("Content-Type".utf8)
+    }
+}
+
 // MARK: - Hashable
 
 extension RFC_2045.ContentType: Hashable {
@@ -82,9 +90,9 @@ extension RFC_2045.ContentType: Hashable {
 
     /// Equality comparison (case-insensitive for type/subtype)
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.type.lowercased() == rhs.type.lowercased() &&
-        lhs.subtype.lowercased() == rhs.subtype.lowercased() &&
-        lhs.parameters == rhs.parameters
+        lhs.type.lowercased() == rhs.type.lowercased()
+            && lhs.subtype.lowercased() == rhs.subtype.lowercased()
+            && lhs.parameters == rhs.parameters
     }
 }
 
@@ -118,7 +126,7 @@ extension RFC_2045.ContentType: UInt8.ASCII.Serializing {
     ///
     /// - Parameter bytes: The ASCII byte representation of the header value
     /// - Throws: `RFC_2045.ContentType.Error` if the bytes are malformed
-    public init<Bytes: Collection>(ascii bytes: Bytes) throws(Error)
+    public init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
     where Bytes.Element == UInt8 {
         let byteArray = Array(bytes)
 
@@ -170,20 +178,26 @@ extension RFC_2045.ContentType: UInt8.ASCII.Serializing {
                     continue
                 }
 
-                let keyBytes = paramPair[..<equalsIndex].trimming(.ascii.whitespaces)
-                var valueBytes = Array(paramPair[(equalsIndex + 1)...].trimming(.ascii.whitespaces))
+                let keyBytes = paramPair[..<equalsIndex].ascii.trimming(.ascii.whitespaces)
+                var valueBytes = Array(
+                    paramPair[(equalsIndex + 1)...].ascii.trimming(.ascii.whitespaces)
+                )
 
                 guard !keyBytes.isEmpty else {
                     continue
                 }
 
                 // Handle quoted values
-                if valueBytes.first == .ascii.quotationMark && valueBytes.last == .ascii.quotationMark {
+                if valueBytes.first == .ascii.quotationMark
+                    && valueBytes.last == .ascii.quotationMark
+                {
                     // Remove surrounding quotes
                     valueBytes = Array(valueBytes.dropFirst().dropLast())
                 }
 
-                let key = RFC_2045.Parameter.Name(rawValue: String(decoding: keyBytes, as: UTF8.self).lowercased())
+                let key = RFC_2045.Parameter.Name(
+                    rawValue: String(decoding: keyBytes, as: UTF8.self).lowercased()
+                )
                 let value = String(decoding: valueBytes, as: UTF8.self)
 
                 params[key] = value
@@ -233,21 +247,22 @@ extension [UInt8] {
         self = []
 
         // Estimate capacity: type + "/" + subtype + parameters
-        let estimatedCapacity = contentType.type.count + 1 + contentType.subtype.count +
-                                (contentType.parameters.count * 30) // ~30 bytes per parameter
+        let estimatedCapacity =
+            contentType.type.count + 1 + contentType.subtype.count
+            + (contentType.parameters.count * 30)  // ~30 bytes per parameter
         self.reserveCapacity(estimatedCapacity)
 
         // Append type/subtype
         self.append(contentsOf: contentType.type.utf8)
-        self.append(.ascii.solidus) // "/"
+        self.append(.ascii.solidus)  // "/"
         self.append(contentsOf: contentType.subtype.utf8)
 
         // Append parameters in sorted order for consistency
         for (key, value) in contentType.parameters.sorted(by: { $0.key < $1.key }) {
-            self.append(.ascii.semicolon) // ";"
+            self.append(.ascii.semicolon)  // ";"
             self.append(.ascii.space)
             self.append(contentsOf: key.storage.value.lowercased().utf8)
-            self.append(.ascii.equalsSign) // "="
+            self.append(.ascii.equalsSign)  // "="
 
             // Quote value if it contains special characters per RFC 2045 Section 5.1
             let needsQuoting = value.contains(where: {
@@ -255,9 +270,9 @@ extension [UInt8] {
             })
 
             if needsQuoting {
-                self.append(.ascii.quotationMark) // "\""
+                self.append(.ascii.quotationMark)  // "\""
                 self.append(contentsOf: value.utf8)
-                self.append(.ascii.quotationMark) // "\""
+                self.append(.ascii.quotationMark)  // "\""
             } else {
                 self.append(contentsOf: value.utf8)
             }
@@ -267,7 +282,7 @@ extension [UInt8] {
 
 // MARK: - Protocol Conformances
 
-extension RFC_2045.ContentType: RawRepresentable {
+extension RFC_2045.ContentType: UInt8.ASCII.RawRepresentable {
     public typealias RawValue = String
 }
 extension RFC_2045.ContentType: CustomStringConvertible {}
@@ -371,7 +386,12 @@ extension RFC_2045.ContentType {
         if let name = name {
             params[.init(rawValue: "name")] = name
         }
-        return RFC_2045.ContentType(__unchecked: (), type: "application", subtype: "octet-stream", parameters: params)
+        return RFC_2045.ContentType(
+            __unchecked: (),
+            type: "application",
+            subtype: "octet-stream",
+            parameters: params
+        )
     }
 
     /// application/pdf
@@ -387,7 +407,12 @@ extension RFC_2045.ContentType {
         if let name = name {
             params[.init(rawValue: "name")] = name
         }
-        return RFC_2045.ContentType(__unchecked: (), type: "application", subtype: "pdf", parameters: params)
+        return RFC_2045.ContentType(
+            __unchecked: (),
+            type: "application",
+            subtype: "pdf",
+            parameters: params
+        )
     }
 
     // MARK: Image Types
@@ -405,7 +430,12 @@ extension RFC_2045.ContentType {
         if let name = name {
             params[.init(rawValue: "name")] = name
         }
-        return RFC_2045.ContentType(__unchecked: (), type: "image", subtype: "jpeg", parameters: params)
+        return RFC_2045.ContentType(
+            __unchecked: (),
+            type: "image",
+            subtype: "jpeg",
+            parameters: params
+        )
     }
 
     /// image/png
@@ -421,7 +451,12 @@ extension RFC_2045.ContentType {
         if let name = name {
             params[.init(rawValue: "name")] = name
         }
-        return RFC_2045.ContentType(__unchecked: (), type: "image", subtype: "png", parameters: params)
+        return RFC_2045.ContentType(
+            __unchecked: (),
+            type: "image",
+            subtype: "png",
+            parameters: params
+        )
     }
 
     /// image/gif
@@ -437,7 +472,12 @@ extension RFC_2045.ContentType {
         if let name = name {
             params[.init(rawValue: "name")] = name
         }
-        return RFC_2045.ContentType(__unchecked: (), type: "image", subtype: "gif", parameters: params)
+        return RFC_2045.ContentType(
+            __unchecked: (),
+            type: "image",
+            subtype: "gif",
+            parameters: params
+        )
     }
 }
 
