@@ -3,8 +3,9 @@
 //
 // Tests for RFC_2045.Charset MIME character set identifier
 
-import Testing
 import StandardsTestSupport
+import Testing
+
 @testable import RFC_2045
 
 // MARK: - Parsing Tests

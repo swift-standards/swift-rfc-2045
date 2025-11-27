@@ -34,7 +34,7 @@ let package = Package(
             name: "RFC 2045".tests,
             dependencies: [
                 "RFC 2045",
-                    .product(name: "StandardsTestSupport", package: "swift-standards")
+                .product(name: "StandardsTestSupport", package: "swift-standards"),
             ]
         ),
     ],

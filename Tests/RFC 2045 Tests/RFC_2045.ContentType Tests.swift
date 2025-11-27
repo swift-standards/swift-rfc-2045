@@ -3,8 +3,9 @@
 //
 // Tests for RFC_2045.ContentType MIME Content-Type header
 
-import Testing
 import StandardsTestSupport
+import Testing
+
 @testable import RFC_2045
 
 // MARK: - Parsing Tests
@@ -31,7 +32,9 @@ struct `ContentType - Parsing Tests` {
 
         @Test
         func `type and subtype with multiple parameters`() throws {
-            let ct = try RFC_2045.ContentType("multipart/mixed; boundary=----=_Part_1234; charset=UTF-8")
+            let ct = try RFC_2045.ContentType(
+                "multipart/mixed; boundary=----=_Part_1234; charset=UTF-8"
+            )
             #expect(ct.type == "multipart")
             #expect(ct.subtype == "mixed")
             #expect(ct.boundary == "----=_Part_1234")

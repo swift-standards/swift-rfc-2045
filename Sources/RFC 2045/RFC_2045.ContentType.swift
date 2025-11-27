@@ -187,11 +187,11 @@ extension RFC_2045.ContentType: UInt8.ASCII.Serializable {
                     continue
                 }
 
-                // Handle quoted values
-                if valueBytes.first == .ascii.quotationMark
+                // Handle quoted values - remove surrounding quotes if present
+                let isQuoted =
+                    valueBytes.first == .ascii.quotationMark
                     && valueBytes.last == .ascii.quotationMark
-                {
-                    // Remove surrounding quotes
+                if isQuoted {
                     valueBytes = Array(valueBytes.dropFirst().dropLast())
                 }
 

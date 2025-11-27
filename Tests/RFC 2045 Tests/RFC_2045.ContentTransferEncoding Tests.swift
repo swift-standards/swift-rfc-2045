@@ -3,8 +3,9 @@
 //
 // Tests for RFC_2045.ContentTransferEncoding MIME Content-Transfer-Encoding header
 
-import Testing
 import StandardsTestSupport
+import Testing
+
 @testable import RFC_2045
 
 // MARK: - Parsing Tests
@@ -86,7 +87,8 @@ struct `ContentTransferEncoding - Parsing Tests` {
             #expect {
                 try RFC_2045.ContentTransferEncoding("unknown")
             } throws: { error in
-                guard case RFC_2045.ContentTransferEncoding.Error.unrecognizedEncoding = error else {
+                guard case RFC_2045.ContentTransferEncoding.Error.unrecognizedEncoding = error
+                else {
                     return false
                 }
                 return true
@@ -98,7 +100,8 @@ struct `ContentTransferEncoding - Parsing Tests` {
             #expect {
                 try RFC_2045.ContentTransferEncoding("base")
             } throws: { error in
-                guard case RFC_2045.ContentTransferEncoding.Error.unrecognizedEncoding = error else {
+                guard case RFC_2045.ContentTransferEncoding.Error.unrecognizedEncoding = error
+                else {
                     return false
                 }
                 return true
@@ -150,7 +153,10 @@ struct `ContentTransferEncoding - Properties Tests` {
             (RFC_2045.ContentTransferEncoding.base64, "base64"),
             (RFC_2045.ContentTransferEncoding.quotedPrintable, "quoted-printable"),
         ])
-        func `headerValue matches expected`(encoding: RFC_2045.ContentTransferEncoding, expected: String) {
+        func `headerValue matches expected`(
+            encoding: RFC_2045.ContentTransferEncoding,
+            expected: String
+        ) {
             #expect(encoding.headerValue == expected)
         }
     }
