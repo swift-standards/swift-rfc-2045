@@ -55,7 +55,7 @@ extension RFC_2045 {
         ///   - type: Primary media type (should be lowercased)
         ///   - subtype: Media subtype (should be lowercased)
         ///   - parameters: Optional parameters
-        init(
+        public init(
             __unchecked: Void,
             type: String,
             subtype: String,
@@ -96,9 +96,9 @@ extension RFC_2045.ContentType: Hashable {
     }
 }
 
-// MARK: - Serializing
+// MARK: - Serializable
 
-extension RFC_2045.ContentType: UInt8.ASCII.Serializing {
+extension RFC_2045.ContentType: UInt8.ASCII.Serializable {
     public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
 
     /// Parses a Content-Type header from canonical byte representation (CANONICAL PRIMITIVE)

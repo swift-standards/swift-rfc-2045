@@ -104,9 +104,9 @@ extension [UInt8] {
     }
 }
 
-// MARK: - Serializing
+// MARK: - Serializable
 
-extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializing {
+extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializable {
     public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
 
     /// Parses a Content-Transfer-Encoding header from canonical byte representation

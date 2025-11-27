@@ -85,9 +85,9 @@ extension RFC_2045.Parameter.Name: Hashable {
     }
 }
 
-// MARK: - Serializing
+// MARK: - Serializable
 
-extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializing {
+extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializable {
     public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
 
     /// Parses a parameter name from canonical byte representation (CANONICAL PRIMITIVE)
