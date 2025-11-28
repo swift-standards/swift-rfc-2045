@@ -107,8 +107,6 @@ extension [UInt8] {
 // MARK: - Serializable
 
 extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializable {
-    public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
-
     /// Parses a Content-Transfer-Encoding header from canonical byte representation
     ///
     /// - Parameter bytes: The ASCII byte representation of the header value
@@ -153,18 +151,10 @@ extension [UInt8] {
     ]
 }
 
-// MARK: - Byte Serialization
-
-extension [UInt8] {
-    /// Creates ASCII byte representation of an RFC 2045 ContentTransferEncoding
-    ///
-    /// - Parameter encoding: The transfer encoding to serialize
-    public init(_ encoding: RFC_2045.ContentTransferEncoding) {
-        self = Array(encoding.rawValue.utf8)
-    }
-}
-
 // MARK: - Protocol Conformances
+
+// Note: Uses UInt8.ASCII.Serializable (not RawRepresentable) to get
+// serialize(ascii:) default that uses native enum rawValue
 
 extension RFC_2045.ContentTransferEncoding: CustomStringConvertible {
     public var description: String { headerValue }

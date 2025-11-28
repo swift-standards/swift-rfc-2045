@@ -88,7 +88,6 @@ extension RFC_2045.Parameter.Name: Hashable {
 // MARK: - Serializable
 
 extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializable {
-    public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
 
     /// Parses a parameter name from canonical byte representation (CANONICAL PRIMITIVE)
     ///
@@ -170,39 +169,6 @@ extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializable {
 
         let rawValue = String(decoding: bytes, as: UTF8.self)
         self.init(__unchecked: (), rawValue: rawValue)
-    }
-}
-
-// MARK: - Byte Serialization
-
-extension [UInt8] {
-    /// Creates ASCII byte representation of an RFC 2045 Parameter.Name
-    ///
-    /// This is the canonical serialization of parameter names to bytes.
-    /// Parameter names are ASCII tokens by definition.
-    ///
-    /// ## Category Theory
-    ///
-    /// This is the most universal serialization (natural transformation):
-    /// - **Domain**: RFC_2045.Parameter.Name (structured data)
-    /// - **Codomain**: [UInt8] (ASCII bytes)
-    ///
-    /// String representation is derived as composition:
-    /// ```
-    /// Parameter.Name → [UInt8] (ASCII) → String (UTF-8 interpretation)
-    /// ```
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let name = RFC_2045.Parameter.Name.charset
-    /// let bytes = [UInt8](name)
-    /// // bytes represents "charset" as ASCII bytes
-    /// ```
-    ///
-    /// - Parameter name: The parameter name to serialize
-    public init(_ name: RFC_2045.Parameter.Name) {
-        self = Array(name.storage.value.lowercased().utf8)
     }
 }
 

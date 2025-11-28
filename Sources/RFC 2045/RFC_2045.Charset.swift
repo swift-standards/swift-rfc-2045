@@ -36,11 +36,8 @@ extension RFC_2045 {
     ///
     /// Custom character sets can be created using the string-based initializer.
     public struct Charset: Sendable, Codable {
-        /// Internal storage to avoid protocol rawValue shadowing
-        internal let _storage: String
-
         /// The IANA charset identifier (stored uppercased)
-        public var rawValue: String { _storage }
+        public let rawValue: String
 
         /// Creates a Charset WITHOUT validation
         ///
@@ -54,7 +51,7 @@ extension RFC_2045 {
             __unchecked: Void,
             rawValue: String
         ) {
-            self._storage = rawValue
+            self.rawValue = rawValue
         }
 
         /// Creates a charset with the given identifier
@@ -62,7 +59,7 @@ extension RFC_2045 {
         /// - Parameter rawValue: IANA charset identifier (case-insensitive)
         public init(_ rawValue: String) {
             // Charset identifiers are case-insensitive per RFC 2045
-            self._storage = rawValue.uppercased()
+            self.rawValue = rawValue.uppercased()
         }
     }
 }
@@ -175,7 +172,7 @@ extension [UInt8] {
     ///
     /// - Parameter charset: The charset to serialize
     public init(_ charset: RFC_2045.Charset) {
-        self = Array(charset._storage.utf8)
+        self = Array(charset.rawValue.utf8)
     }
 }
 

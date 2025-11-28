@@ -32,3 +32,14 @@ extension RFC_2045.ContentTransferEncoding {
         case unrecognizedEncoding(String)
     }
 }
+
+extension RFC_2045.ContentTransferEncoding.Error: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .empty:
+            return "Content-Transfer-Encoding cannot be empty"
+        case .unrecognizedEncoding(let value):
+            return "Unrecognized encoding '\(value)' (must be: 7bit, 8bit, binary, quoted-printable, or base64)"
+        }
+    }
+}
