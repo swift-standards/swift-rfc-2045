@@ -37,7 +37,7 @@ struct `README Verification` {
 
         // Use in email headers
         let headers = [
-            "Content-Transfer-Encoding": base64.headerValue  // "base64"
+            "Content-Transfer-Encoding": base64.description  // "base64"
         ]
         #expect(headers["Content-Transfer-Encoding"] == "base64")
 
@@ -80,7 +80,7 @@ struct `README Verification` {
 
         // Parse Content-Transfer-Encoding header using UInt8.ASCII.Serializable protocol
         let encoding = try RFC_2045.ContentTransferEncoding("base64")
-        #expect(encoding.headerValue == "base64")
+        #expect(encoding.description == "base64")
     }
 
     @Test

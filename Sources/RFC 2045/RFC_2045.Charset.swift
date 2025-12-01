@@ -94,7 +94,12 @@ public func == (lhs: RFC_2045.Charset?, rhs: String) -> Bool {
 // MARK: - Serializable
 
 extension RFC_2045.Charset: UInt8.ASCII.Serializable {
-    public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
+    public static func serialize<Buffer: RangeReplaceableCollection>(
+        ascii charset: Self,
+        into buffer: inout Buffer
+    ) where Buffer.Element == UInt8 {
+        buffer.append(contentsOf: charset.rawValue.utf8)
+    }
 
     /// Parses a charset identifier from canonical byte representation (CANONICAL PRIMITIVE)
     ///

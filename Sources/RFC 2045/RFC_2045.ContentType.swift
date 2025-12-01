@@ -99,7 +99,24 @@ extension RFC_2045.ContentType: Hashable {
 // MARK: - Serializable
 
 extension RFC_2045.ContentType: UInt8.ASCII.Serializable {
-    public static let serialize: @Sendable (Self) -> [UInt8] = [UInt8].init
+    public static func serialize<Buffer: RangeReplaceableCollection>(
+        ascii contentType: Self,
+        into buffer: inout Buffer
+    ) where Buffer.Element == UInt8 {
+        // type/subtype
+        buffer.append(contentsOf: contentType.type.utf8)
+        buffer.append(.ascii.solidus)
+        buffer.append(contentsOf: contentType.subtype.utf8)
+
+        // parameters: ; name=value
+        for (name, value) in contentType.parameters {
+            buffer.append(.ascii.semicolon)
+            buffer.append(.ascii.space)
+            buffer.append(contentsOf: name.rawValue.utf8)
+            buffer.append(.ascii.equalsSign)
+            buffer.append(contentsOf: value.utf8)
+        }
+    }
 
     /// Parses a Content-Type header from canonical byte representation (CANONICAL PRIMITIVE)
     ///

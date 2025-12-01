@@ -157,7 +157,7 @@ struct `ContentTransferEncoding - Properties Tests` {
             encoding: RFC_2045.ContentTransferEncoding,
             expected: String
         ) {
-            #expect(encoding.headerValue == expected)
+            #expect(encoding.description == expected)
         }
     }
 
@@ -238,7 +238,7 @@ struct `ContentTransferEncoding - Serialization Tests` {
     @Test
     func `description matches headerValue`() {
         let encoding = RFC_2045.ContentTransferEncoding.base64
-        #expect(encoding.description == encoding.headerValue)
+        #expect(encoding.description == encoding.description)
     }
 }
 

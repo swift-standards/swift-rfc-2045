@@ -59,16 +59,6 @@ extension RFC_2045 {
         /// encoding for attachments and non-text content.
         case base64 = "base64"
 
-        /// The header value string
-        ///
-        /// Example: `"base64"`
-        ///
-        /// Note: This uses the enum's native `rawValue`, NOT the protocol extension's.
-        /// It works because we access it on a concrete type, not through a protocol constraint.
-        public var headerValue: String {
-            rawValue
-        }
-
         /// Returns true if this encoding is binary-safe
         ///
         /// Binary-safe encodings (base64, quoted-printable) can represent
@@ -107,6 +97,20 @@ extension [UInt8] {
 // MARK: - Serializable
 
 extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializable {
+    static public func serialize<Buffer>(
+        _ encoding: RFC_2045.ContentTransferEncoding,
+        into buffer: inout Buffer
+    ) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+        buffer.append(contentsOf: Array(encoding.rawValue.utf8))
+    }
+    
+    public static func serialize<Buffer>(
+        ascii encoding: RFC_2045.ContentTransferEncoding,
+        into buffer: inout Buffer
+    ) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+        buffer.append(contentsOf: Array(encoding.rawValue.utf8))
+    }
+    
     /// Parses a Content-Transfer-Encoding header from canonical byte representation
     ///
     /// - Parameter bytes: The ASCII byte representation of the header value
@@ -156,6 +160,5 @@ extension [UInt8] {
 // Note: Uses UInt8.ASCII.Serializable (not RawRepresentable) to get
 // serialize(ascii:) default that uses native enum rawValue
 
-extension RFC_2045.ContentTransferEncoding: CustomStringConvertible {
-    public var description: String { headerValue }
-}
+extension RFC_2045.ContentTransferEncoding: CustomStringConvertible {}
+extension RFC_2045.ContentTransferEncoding: RawRepresentable {}

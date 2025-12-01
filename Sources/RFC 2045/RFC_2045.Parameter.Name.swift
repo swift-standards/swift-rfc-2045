@@ -88,6 +88,12 @@ extension RFC_2045.Parameter.Name: Hashable {
 // MARK: - Serializable
 
 extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializable {
+    public static func serialize<Buffer: RangeReplaceableCollection>(
+        ascii name: Self,
+        into buffer: inout Buffer
+    ) where Buffer.Element == UInt8 {
+        buffer.append(contentsOf: name.rawValue.utf8)
+    }
 
     /// Parses a parameter name from canonical byte representation (CANONICAL PRIMITIVE)
     ///
