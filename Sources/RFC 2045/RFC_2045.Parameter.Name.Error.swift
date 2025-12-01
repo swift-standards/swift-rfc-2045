@@ -40,7 +40,8 @@ extension RFC_2045.Parameter.Name.Error: CustomStringConvertible {
         case .empty:
             return "Parameter name cannot be empty"
         case .invalidCharacter(let value, let byte, let reason):
-            return "Invalid byte 0x\(String(byte, radix: 16, uppercase: true)) in '\(value)': \(reason)"
+            return
+                "Invalid byte 0x\(String(byte, radix: 16, uppercase: true)) in '\(value)': \(reason)"
         }
     }
 }

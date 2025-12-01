@@ -68,7 +68,8 @@ extension RFC_2045.ContentType.Error: CustomStringConvertible {
         case .emptySubtype(let value):
             return "Subtype component is empty in '\(value)'"
         case .invalidCharacter(let value, let byte, let reason):
-            return "Invalid byte 0x\(String(byte, radix: 16, uppercase: true)) in '\(value)': \(reason)"
+            return
+                "Invalid byte 0x\(String(byte, radix: 16, uppercase: true)) in '\(value)': \(reason)"
         case .invalidParameter(let value, let reason):
             return "Invalid parameter in '\(value)': \(reason)"
         }

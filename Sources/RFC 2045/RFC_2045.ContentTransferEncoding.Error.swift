@@ -39,7 +39,8 @@ extension RFC_2045.ContentTransferEncoding.Error: CustomStringConvertible {
         case .empty:
             return "Content-Transfer-Encoding cannot be empty"
         case .unrecognizedEncoding(let value):
-            return "Unrecognized encoding '\(value)' (must be: 7bit, 8bit, binary, quoted-printable, or base64)"
+            return
+                "Unrecognized encoding '\(value)' (must be: 7bit, 8bit, binary, quoted-printable, or base64)"
         }
     }
 }

@@ -100,17 +100,17 @@ extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializable {
     static public func serialize<Buffer>(
         _ encoding: RFC_2045.ContentTransferEncoding,
         into buffer: inout Buffer
-    ) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+    ) where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         buffer.append(contentsOf: Array(encoding.rawValue.utf8))
     }
-    
+
     public static func serialize<Buffer>(
         ascii encoding: RFC_2045.ContentTransferEncoding,
         into buffer: inout Buffer
-    ) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+    ) where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         buffer.append(contentsOf: Array(encoding.rawValue.utf8))
     }
-    
+
     /// Parses a Content-Transfer-Encoding header from canonical byte representation
     ///
     /// - Parameter bytes: The ASCII byte representation of the header value
