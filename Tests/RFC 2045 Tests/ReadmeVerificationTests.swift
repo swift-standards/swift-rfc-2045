@@ -12,7 +12,7 @@ struct `README Verification` {
         #expect(plain.type == "text")
         #expect(plain.subtype == "plain")
 
-        // Parse from string using UInt8.ASCII.Serializable protocol
+        // Parse from string using Binary.ASCII.Serializable protocol
         let html = try RFC_2045.ContentType("text/html; charset=UTF-8")
         #expect(html.headerValue == "text/html; charset=UTF-8")
 
@@ -71,14 +71,14 @@ struct `README Verification` {
 
     @Test
     func `Example from README: Parsing Headers`() throws {
-        // Parse Content-Type header using UInt8.ASCII.Serializable protocol
+        // Parse Content-Type header using Binary.ASCII.Serializable protocol
         let contentType = try RFC_2045.ContentType("text/html; charset=UTF-8")
 
         #expect(contentType.type == "text")
         #expect(contentType.subtype == "html")
         #expect(contentType.charset == "UTF-8")
 
-        // Parse Content-Transfer-Encoding header using UInt8.ASCII.Serializable protocol
+        // Parse Content-Transfer-Encoding header using Binary.ASCII.Serializable protocol
         let encoding = try RFC_2045.ContentTransferEncoding("base64")
         #expect(encoding.description == "base64")
     }

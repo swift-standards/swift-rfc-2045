@@ -93,7 +93,7 @@ public func == (lhs: RFC_2045.Charset?, rhs: String) -> Bool {
 
 // MARK: - Serializable
 
-extension RFC_2045.Charset: UInt8.ASCII.Serializable {
+extension RFC_2045.Charset: Binary.ASCII.Serializable {
     public static func serialize<Buffer: RangeReplaceableCollection>(
         ascii charset: Self,
         into buffer: inout Buffer
@@ -183,7 +183,7 @@ extension [UInt8] {
 
 // MARK: - Protocol Conformances
 
-extension RFC_2045.Charset: UInt8.ASCII.RawRepresentable {}
+extension RFC_2045.Charset: Binary.ASCII.RawRepresentable {}
 extension RFC_2045.Charset: CustomStringConvertible {}
 
 // MARK: - Common Charsets

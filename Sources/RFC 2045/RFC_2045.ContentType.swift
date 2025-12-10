@@ -98,7 +98,7 @@ extension RFC_2045.ContentType: Hashable {
 
 // MARK: - Serializable
 
-extension RFC_2045.ContentType: UInt8.ASCII.Serializable {
+extension RFC_2045.ContentType: Binary.ASCII.Serializable {
     public static func serialize<Buffer: RangeReplaceableCollection>(
         ascii contentType: Self,
         into buffer: inout Buffer
@@ -299,7 +299,7 @@ extension [UInt8] {
 
 // MARK: - Protocol Conformances
 
-extension RFC_2045.ContentType: UInt8.ASCII.RawRepresentable {
+extension RFC_2045.ContentType: Binary.ASCII.RawRepresentable {
     public typealias RawValue = String
 }
 extension RFC_2045.ContentType: CustomStringConvertible {}

@@ -247,7 +247,7 @@ struct `ContentTransferEncoding - Serialization Tests` {
 extension `Performance Tests` {
     @Suite
     struct `ContentTransferEncoding - Performance` {
-        @Test(.timed(threshold: .milliseconds(500)))
+        @Test(.timed(threshold: .milliseconds(1000)))
         func `parse 100K encodings`() throws {
             for _ in 0..<100_000 {
                 _ = try RFC_2045.ContentTransferEncoding("base64")

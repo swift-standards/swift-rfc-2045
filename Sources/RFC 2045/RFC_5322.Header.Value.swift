@@ -10,7 +10,7 @@ public import RFC_5322
 extension RFC_5322.Header.Value {
     /// Creates a header value from RFC 2045 ContentType
     ///
-    /// Uses the canonical string representation provided by UInt8.ASCII.Serializable.
+    /// Uses the canonical string representation provided by Binary.ASCII.Serializable.
     public init(_ contentType: RFC_2045.ContentType) throws {
         try self.init(String(contentType))
     }
@@ -19,7 +19,7 @@ extension RFC_5322.Header.Value {
 extension RFC_5322.Header.Value {
     /// Creates a header value from RFC 2045 ContentTransferEncoding
     ///
-    /// Uses the canonical string representation provided by UInt8.ASCII.Serializable.
+    /// Uses the canonical string representation provided by Binary.ASCII.Serializable.
     public init(_ encoding: RFC_2045.ContentTransferEncoding) throws {
         try self.init(String(encoding))
     }

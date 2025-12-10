@@ -96,7 +96,7 @@ extension [UInt8] {
 
 // MARK: - Serializable
 
-extension RFC_2045.ContentTransferEncoding: UInt8.ASCII.Serializable {
+extension RFC_2045.ContentTransferEncoding: Binary.ASCII.Serializable {
     static public func serialize<Buffer>(
         _ encoding: RFC_2045.ContentTransferEncoding,
         into buffer: inout Buffer
@@ -157,7 +157,7 @@ extension [UInt8] {
 
 // MARK: - Protocol Conformances
 
-// Note: Uses UInt8.ASCII.Serializable (not RawRepresentable) to get
+// Note: Uses Binary.ASCII.Serializable (not RawRepresentable) to get
 // serialize(ascii:) default that uses native enum rawValue
 
 extension RFC_2045.ContentTransferEncoding: CustomStringConvertible {}

@@ -6,7 +6,7 @@
 //
 
 public import INCITS_4_1986
-public import Standards
+import Standards
 
 extension RFC_2045.Parameter {
     /// Type-safe MIME parameter name with case-insensitive comparison.
@@ -87,7 +87,7 @@ extension RFC_2045.Parameter.Name: Hashable {
 
 // MARK: - Serializable
 
-extension RFC_2045.Parameter.Name: UInt8.ASCII.Serializable {
+extension RFC_2045.Parameter.Name: Binary.ASCII.Serializable {
     public static func serialize<Buffer: RangeReplaceableCollection>(
         ascii name: Self,
         into buffer: inout Buffer
