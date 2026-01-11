@@ -6,7 +6,7 @@
 //
 
 public import INCITS_4_1986
-import Standards
+import Standard_Library_Extensions
 
 extension RFC_2045.Parameter {
     /// Type-safe MIME parameter name with case-insensitive comparison.

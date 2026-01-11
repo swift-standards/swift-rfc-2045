@@ -18,9 +18,11 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-standards/swift-incits-4-1986", from: "0.6.3"),
-        .package(url: "https://github.com/swift-standards/swift-rfc-5322", from: "0.7.1"),
-        .package(url: "https://github.com/swift-standards/swift-standards", from: "0.10.0"),
+        .package(path: "../swift-incits-4-1986"),
+        .package(path: "../swift-rfc-5322"),
+        .package(path: "../../swift-primitives/swift-standard-library-extensions"),
+        .package(path: "../../swift-primitives/swift-binary-primitives"),
+        .package(path: "../../swift-primitives/swift-test-primitives"),
     ],
     targets: [
         .target(
@@ -28,14 +30,15 @@ let package = Package(
             dependencies: [
                 .product(name: "INCITS 4 1986", package: "swift-incits-4-1986"),
                 .product(name: "RFC 5322", package: "swift-rfc-5322"),
-                .product(name: "Standards", package: "swift-standards"),
+                .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
+                .product(name: "Binary Primitives", package: "swift-binary-primitives"),
             ]
         ),
         .testTarget(
             name: "RFC 2045".tests,
             dependencies: [
                 "RFC 2045",
-                .product(name: "StandardsTestSupport", package: "swift-standards"),
+                .product(name: "Test Primitives", package: "swift-test-primitives"),
             ]
         ),
     ],
