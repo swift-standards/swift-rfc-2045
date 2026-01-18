@@ -4,7 +4,7 @@
 // Tests for RFC_2045.ContentType MIME Content-Type header
 
 import Testing
-import Testing_Extras
+import Testing
 
 @testable import RFC_2045
 
