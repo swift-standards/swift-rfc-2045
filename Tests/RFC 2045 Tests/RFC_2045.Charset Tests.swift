@@ -4,7 +4,6 @@
 // Tests for RFC_2045.Charset MIME character set identifier
 
 import Testing
-import Testing
 
 @testable import RFC_2045
 
