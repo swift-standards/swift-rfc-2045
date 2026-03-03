@@ -21,7 +21,7 @@ extension RFC_5322.Header {
     /// let header = try RFC_5322.Header(contentType)
     /// // Header(name: .contentType, value: "text/plain; charset=UTF-8")
     /// ```
-    public init(_ contentType: RFC_2045.ContentType) throws {
+    public init(_ contentType: RFC_2045.ContentType) throws(Value.Error) {
         try self.init(name: .contentType, value: .init(contentType))
     }
 
@@ -36,7 +36,7 @@ extension RFC_5322.Header {
     /// let header = try RFC_5322.Header(encoding)
     /// // Header(name: .contentTransferEncoding, value: "base64")
     /// ```
-    public init(_ encoding: RFC_2045.ContentTransferEncoding) throws {
+    public init(_ encoding: RFC_2045.ContentTransferEncoding) throws(Value.Error) {
         try self.init(name: .contentTransferEncoding, value: .init(encoding))
     }
 }
